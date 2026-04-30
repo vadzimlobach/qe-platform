@@ -15,7 +15,26 @@ The goal is to demonstrate a scalable, maintainable, and realistic approach to a
 - Support fast feedback through CI execution
 - Maintain clean, typed, readable, and reusable test code
 
-## 3. Scope
+## 3. System Under Test
+
+### Primary UI SUT
+
+The primary UI system under test is SauceDemo, a demo e-commerce web application used to validate realistic customer journeys such as login, product browsing, cart management, checkout, and order confirmation.
+
+### Accessibility SUT
+
+Accessibility testing targets the same SauceDemo pages used by the critical UI journeys. Automated checks are performed using axe-core with additional keyboard and semantic validation where appropriate.
+
+### API SUT
+
+SauceDemo does not expose a dedicated public business API for the shop workflow. To demonstrate API automation patterns cleanly, this project uses a local mock API that models typical e-commerce services: authentication, products, cart, and orders.
+API layer is introduced to demonstrate scalable test architecture, typed clients, and contract validation independent of UI limitations.
+
+### Performance SUT
+
+Performance testing is intentionally lightweight. The project validates basic page responsiveness for SauceDemo and basic API performance thresholds against the local mock API. Large-scale load testing is out of scope.
+
+## 4. Scope
 
 ### In Scope
 
@@ -36,17 +55,20 @@ The goal is to demonstrate a scalable, maintainable, and realistic approach to a
 - Security penetration testing
 - Production monitoring
 
-## 4. Test Levels
+## 5. Test Levels
 
 ### UI Tests
 
 Focus on critical user journeys:
 
 - Login
-- Product browsing
-- Basket/cart management
-- Checkout
+- Inventory/products
+- Product details
+- Cart
+- Checkout information
+- Checkout overview
 - Order confirmation
+- Menu/logout
 
 ### API Tests
 
@@ -54,7 +76,7 @@ Focus on service behaviour:
 
 - Authentication
 - Products
-- Basket/cart
+- Cart
 - Orders
 - Negative responses
 - Schema validation
@@ -64,30 +86,49 @@ Focus on service behaviour:
 Focus on key pages:
 
 - Login page
-- Product listing page
-- Basket page
-- Checkout page
+- Inventory page
+- Product details page
+- Cart page
+- Checkout information page
+- Checkout overview page
 - Order confirmation page
+
+Accessibility checks:
+
+- axe critical/serious violations
+- Accessible names for buttons/links
+- Form labels
+- Keyboard navigation
+- Focus visibility
+- Error message accessibility
+- Heading structure
 
 ### Performance Tests
 
 Focus on lightweight API performance checks:
 
-- Product list endpoint
-- Login endpoint
-- Checkout/order endpoint
+Page load performance
+Critical journey timing
+Basic response availability
 
-## 5. Test Types
+Performance checks
 
-| Test Type      | Tool                         | Purpose                                   |
-| -------------- | ---------------------------- | ----------------------------------------- |
-| UI functional  | Playwright                   | Validate user journeys                    |
-| API functional | Playwright APIRequestContext | Validate backend behaviour                |
-| Accessibility  | axe-core/playwright          | Detect accessibility violations           |
-| Performance    | k6                           | Validate basic API performance thresholds |
-| Reporting      | Allure / HTML / JSON         | Provide execution visibility              |
+- Login page loads within threshold
+- Inventory page loads within threshold
+- Cart page loads within threshold
+- Checkout flow completes within threshold
 
-## 6. Test Data Strategy
+## 6. Test Types
+
+| Test Type      | Tool                         | Purpose                                                           |
+| -------------- | ---------------------------- | ----------------------------------------------------------------- |
+| UI functional  | Playwright                   | Validate user journeys                                            |
+| API functional | Playwright APIRequestContext | Validate backend behaviour                                        |
+| Accessibility  | axe-core/playwright          | Detect accessibility violations                                   |
+| Performance    | Playwright timings / k6      | Validate page responsiveness and basic API performance thresholds |
+| Reporting      | Allure / HTML / JSON         | Provide execution visibility                                      |
+
+## 7. Test Data Strategy
 
 - Use deterministic test users where possible
 - Generate dynamic data for isolated scenarios
@@ -95,7 +136,27 @@ Focus on lightweight API performance checks:
 - Prefer API setup for fast and reliable preconditions
 - Keep test data builders typed and reusable
 
-## 7. Coding Standards
+## 8. Test Selection Strategy
+
+Tests are grouped using tags to support targeted execution:
+
+- `@smoke` for critical PR checks
+- `@regression` for broader functional coverage
+- `@api` for API-level tests
+- `@accessibility` for accessibility checks
+- `@performance` for performance checks
+
+## 9. Risks and Mitigations
+
+| Risk                            | Mitigation                                                                    |
+| ------------------------------- | ----------------------------------------------------------------------------- |
+| SauceDemo availability issues   | Keep tests focused, add clear failure diagnostics, avoid excessive execution  |
+| UI locator changes              | Prefer semantic locators and centralised page objects                         |
+| Flaky tests                     | Avoid hardcoded waits, use Playwright auto-waiting, isolate test data         |
+| Mock API divergence from UI app | Document API as architecture demonstration, not SauceDemo backend replacement |
+| Overengineering                 | Keep framework features driven by test needs                                  |
+
+## 10. Coding Standards
 
 - TypeScript strict mode enabled
 - No `any` type
@@ -106,7 +167,7 @@ Focus on lightweight API performance checks:
 - Page objects expose user actions, not implementation details
 - API clients use typed request and response models
 
-## 8. Reliability Strategy
+## 11. Reliability Strategy
 
 - Prefer role-based and semantic locators
 - Avoid brittle CSS/XPath selectors where possible
@@ -115,7 +176,7 @@ Focus on lightweight API performance checks:
 - Keep tests independent and parallel-safe
 - Use retries only as a safety net, not to hide flaky design
 
-## 9. Reporting Strategy
+## 12. Reporting Strategy
 
 Reports should support both technical debugging and stakeholder visibility.
 
@@ -133,7 +194,7 @@ Key metrics:
 - Flaky tests
 - Slowest tests
 
-## 10. CI Strategy
+## 13. CI Strategy
 
 Automated tests should run in GitHub Actions.
 
@@ -143,7 +204,7 @@ Suggested pipeline split:
 - Main branch: regression suite
 - Manual/nightly: performance checks
 
-## 11. Definition of Done
+## 14. Definition of Done
 
 A test or framework feature is complete when:
 
@@ -153,4 +214,4 @@ A test or framework feature is complete when:
 - Tests can run locally and in CI
 - Failure output is debuggable
 - Documentation is updated where relevant
-- Commit message follows the agreed convention
+- Commit message follows the agreed convention: `feat`, `fix`, `refactor`, `test`, `docs`, `ci`, or `build`
