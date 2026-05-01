@@ -21,6 +21,33 @@ test.describe("Auth API", () => {
     expect(body.user.role).toBe("standard");
   });
 
+  test("should login with generated api user", async ({ request }) => {
+    const username = `api-user-${test.info().parallelIndex}-${Date.now()}`;
+
+    const response = await request.post(
+      `${config.apiBaseUrl}/test/createUser`,
+      {
+        data: {
+          username: username,
+          password: config.credentials.password,
+          role: "standard",
+        },
+      },
+    );
+
+    const newUser = (await response.json()).user;
+
+    const loginResponse = await request.post(
+      `${config.apiBaseUrl}/auth/login`,
+      {
+        data: newUser,
+      },
+    );
+
+    expect(loginResponse.status()).toBe(200);
+    expect(await loginResponse.json()).toHaveProperty("token");
+  });
+
   [
     {
       credentialsType: "empty",
