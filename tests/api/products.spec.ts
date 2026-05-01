@@ -1,10 +1,11 @@
 import { test, expect } from "@playwright/test";
+import config from "../../config/config";
 
 test.describe("Products API", () => {
   test("should return list of products when product id is not specified", async ({
     request,
   }) => {
-    const response = await request.get("http://localhost:3000/products");
+    const response = await request.get(`${config.apiBaseUrl}/products`);
 
     expect(response.status()).toBe(200);
 
@@ -16,7 +17,7 @@ test.describe("Products API", () => {
   test("should return a single product when called with valid id", async ({
     request,
   }) => {
-    const response = await request.get("http://localhost:3000/products/1");
+    const response = await request.get(`${config.apiBaseUrl}/products/1`);
 
     expect(response.status()).toBe(200);
 
@@ -46,9 +47,7 @@ test.describe("Products API", () => {
     test(`should return ${error} when called with ${idType}`, async ({
       request,
     }) => {
-      const response = await request.get(
-        `http://localhost:3000/products/${id}`,
-      );
+      const response = await request.get(`${config.apiBaseUrl}/products/${id}`);
 
       expect(response.status()).toBe(errorCode);
       expect((await response.json()).error).toBe(error);
