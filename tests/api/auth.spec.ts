@@ -1,13 +1,14 @@
 import { test, expect } from "@playwright/test";
+import config from "../../config/config";
 
 test.describe("Auth API", () => {
   test("should login successfully with valid credentials", async ({
     request,
   }) => {
-    const response = await request.post("http://localhost:3000/auth/login", {
+    const response = await request.post(`${config.apiBaseUrl}/auth/login`, {
       data: {
-        username: "standard_user",
-        password: "secret_sauce",
+        username: config.credentials.username,
+        password: config.credentials.password,
       },
     });
 
@@ -16,7 +17,7 @@ test.describe("Auth API", () => {
     const body = await response.json();
 
     expect(body).toHaveProperty("token");
-    expect(body.user.username).toBe("standard_user");
+    expect(body.user.username).toBe(config.credentials.username);
     expect(body.user.role).toBe("standard");
   });
 
@@ -60,7 +61,7 @@ test.describe("Auth API", () => {
       test(`should return an "${expectedError}" when logging in with ${credentialsType} credentials`, async ({
         request,
       }) => {
-        const response = await request.post("http:localhost:3000/auth/login", {
+        const response = await request.post(`${config.apiBaseUrl}/auth/login`, {
           data: {
             username,
             password,
