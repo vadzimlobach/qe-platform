@@ -1,4 +1,4 @@
-import { Locator, Page } from "@playwright/test";
+import { expect, Locator, Page } from "@playwright/test";
 import { routes } from "../routes";
 import { Logger } from "../../../utils/logger";
 
@@ -16,6 +16,11 @@ export class LoginPage {
   async open(): Promise<void> {
     Logger.step("Open login page");
     await this.page.goto(routes.login);
+  }
+
+  async expectLoaded(): Promise<void> {
+    Logger.step("Expect Login Page to be loaded");
+    await expect(this.usernameInput).toBeVisible();
   }
 
   async login(username: string, password: string): Promise<void> {
