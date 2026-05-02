@@ -53,4 +53,30 @@ test.describe("Products API", () => {
       expect((await response.json()).error).toBe(error);
     });
   });
+
+  test("should return 401 when called without auth token", async ({
+    request,
+  }) => {
+    const response = await request.get(`${config.apiBaseUrl}/products`);
+
+    expect(response.status()).toBe(401);
+
+    const body = await response.json();
+
+    expect(body.error).toBe("Authorization token is missing");
+  });
+
+  test("should return 401 when called with invalid auth token", async ({
+    request,
+  }) => {
+    const response = await request.get(`${config.apiBaseUrl}/products`, {
+      headers: { Authorization: "Bearer 1234" },
+    });
+
+    expect(response.status()).toBe(401);
+
+    const body = await response.json();
+
+    expect(body.error).toBe("Unauthorized");
+  });
 });
