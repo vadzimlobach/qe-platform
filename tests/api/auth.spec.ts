@@ -2,43 +2,35 @@ import { test, expect } from "../../framework/fixtures/test.fixture";
 import config from "../../config/config";
 import { CreateUserApiResponse } from "../../framework/core/models/users";
 
-test.describe("Auth API", () => {
-  test("should login successfully with valid credentials", async ({
-    authClient,
-  }) => {
-    const response = await authClient.loginRaw({
-      username: config.credentials.username,
-      password: config.credentials.password,
-    });
+test.describe("Auth API", { tag: "@api" }, () => {
+  test(
+    "should login successfully with valid credentials",
+    { tag: ["@smoke", "@regression"] },
+    async ({ authClient }) => {
+      const response = await authClient.loginRaw({
+        username: config.credentials.username,
+        password: config.credentials.password,
+      });
 
-    expect(response.status()).toBe(200);
+      expect(response.status()).toBe(200);
 
-    const body = await response.json();
+      const body = await response.json();
 
-    expect(body).toHaveProperty("token");
-    expect(body.user.username).toBe(config.credentials.username);
-    expect(body.user.role).toBe("standard");
-  });
+      expect(body).toHaveProperty("token");
+      expect(body.user.username).toBe(config.credentials.username);
+      expect(body.user.role).toBe("standard");
+    },
+  );
 
-  test("should login with generated api user", async ({
-    authClient,
-    usersClient,
-  }) => {
-    const username = `api-user-${test.info().parallelIndex}-${Date.now()}`;
+  test(
+    "should login with generated api user",
+    { tag: ["@smoke", "@regression"] },
+    async ({ createApiSession }) => {
+      const { token } = await createApiSession();
 
-    const response: CreateUserApiResponse = await usersClient.createUser({
-      username,
-      password: config.credentials.password,
-      role: "standard",
-    });
-
-    const loginResponse = await authClient.login({
-      username: response.user.username,
-      password: config.credentials.password,
-    });
-
-    expect(loginResponse).toHaveProperty("token");
-  });
+      expect(token).toBeTruthy();
+    },
+  );
 
   [
     {
@@ -77,17 +69,19 @@ test.describe("Auth API", () => {
       expectedStatusCode,
       expectedError,
     }) => {
-      test(`should return an "${expectedError}" when logging in with ${credentialsType} credentials`, async ({
-        authClient,
-      }) => {
-        const response = await authClient.loginRaw({ username, password });
+      test(
+        `should return an "${expectedError}" when logging in with ${credentialsType} credentials`,
+        { tag: "@regression" },
+        async ({ authClient }) => {
+          const response = await authClient.loginRaw({ username, password });
 
-        expect(response.status()).toBe(expectedStatusCode);
+          expect(response.status()).toBe(expectedStatusCode);
 
-        const body = await response.json();
+          const body = await response.json();
 
-        expect(body.error).toBe(expectedError);
-      });
+          expect(body.error).toBe(expectedError);
+        },
+      );
     },
   );
 });
