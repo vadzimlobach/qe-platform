@@ -4,11 +4,11 @@ import { routes } from "../routes";
 
 export class InventoryPage {
   private readonly title: Locator;
-  private readonly inventoryItems: Locator;
+  private readonly items: Locator;
 
   constructor(private readonly page: Page) {
     this.title = this.page.getByTestId("title");
-    this.inventoryItems = this.page.getByTestId("inventory-item");
+    this.items = this.page.getByTestId("inventory-item");
   }
 
   async open(): Promise<void> {
@@ -17,8 +17,9 @@ export class InventoryPage {
   }
 
   async expectLoaded(): Promise<void> {
-    await expect(this.page).toHaveURL(routes.inventory);
+    Logger.step("Expect Inventory Page to be loaded");
+    await expect(this.page).toHaveURL(new RegExp(`${routes.inventory}`));
     await expect(this.title).toBeVisible();
-    await expect(this.inventoryItems.first()).toBeVisible();
+    await expect(this.items.first()).toBeVisible();
   }
 }

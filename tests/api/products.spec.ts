@@ -1,33 +1,28 @@
-import { test, expect } from "@playwright/test";
-import config from "../../config/config";
+import { test, expect } from "../../framework/fixtures/test.fixture";
 
 test.describe("Products API", () => {
   test("should return list of products when product id is not specified", async ({
-    request,
+    productsClient,
+    createApiSession,
   }) => {
-    const response = await request.get(`${config.apiBaseUrl}/products`);
+    const { token } = await createApiSession();
+    const response = await productsClient.getProducts(token);
 
-    expect(response.status()).toBe(200);
-
-    const body = await response.json();
-
-    expect(body.products.length).toBeGreaterThan(0);
+    expect(response.products.length).toBeGreaterThan(0);
   });
 
   test("should return a single product when called with valid id", async ({
-    request,
+    createApiSession,
+    productsClient,
   }) => {
-    const response = await request.get(`${config.apiBaseUrl}/products/1`);
+    const { token } = await createApiSession();
+    const response = await productsClient.getProduct(1, token);
 
-    expect(response.status()).toBe(200);
-
-    const body = await response.json();
-
-    expect(body.product.id).toBe(1);
-    expect(body.product).toHaveProperty("name");
-    expect(body.product).toHaveProperty("description");
-    expect(body.product).toHaveProperty("price");
-    expect(body.product).toHaveProperty("inStock");
+    expect(response.product.id).toBe(1);
+    expect(response.product).toHaveProperty("name");
+    expect(response.product).toHaveProperty("description");
+    expect(response.product).toHaveProperty("price");
+    expect(response.product).toHaveProperty("inStock");
   });
 
   [
@@ -39,15 +34,17 @@ test.describe("Products API", () => {
     },
     {
       idType: "non-existing",
-      id: 99999,
+      id: -1,
       error: "Product not found",
       errorCode: 404,
     },
   ].forEach(({ idType, id, error, errorCode }) => {
     test(`should return ${error} when called with ${idType}`, async ({
-      request,
+      createApiSession,
+      productsClient,
     }) => {
-      const response = await request.get(`${config.apiBaseUrl}/products/${id}`);
+      const { token } = await createApiSession();
+      const response = await productsClient.getProductRaw(id, token);
 
       expect(response.status()).toBe(errorCode);
       expect((await response.json()).error).toBe(error);
@@ -55,9 +52,9 @@ test.describe("Products API", () => {
   });
 
   test("should return 401 when called without auth token", async ({
-    request,
+    productsClient,
   }) => {
-    const response = await request.get(`${config.apiBaseUrl}/products`);
+    const response = await productsClient.getProductsRaw();
 
     expect(response.status()).toBe(401);
 
@@ -67,11 +64,9 @@ test.describe("Products API", () => {
   });
 
   test("should return 401 when called with invalid auth token", async ({
-    request,
+    productsClient,
   }) => {
-    const response = await request.get(`${config.apiBaseUrl}/products`, {
-      headers: { Authorization: "Bearer 1234" },
-    });
+    const response = await productsClient.getProductsRaw("1234abcd");
 
     expect(response.status()).toBe(401);
 
