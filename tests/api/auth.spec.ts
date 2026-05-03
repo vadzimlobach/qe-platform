@@ -1,15 +1,14 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "../../framework/fixtures/test.fixture";
 import config from "../../config/config";
+import { CreateUserApiResponse } from "../../framework/core/models/users";
 
 test.describe("Auth API", () => {
   test("should login successfully with valid credentials", async ({
-    request,
+    authClient,
   }) => {
-    const response = await request.post(`${config.apiBaseUrl}/auth/login`, {
-      data: {
-        username: config.credentials.username,
-        password: config.credentials.password,
-      },
+    const response = await authClient.loginRaw({
+      username: config.credentials.username,
+      password: config.credentials.password,
     });
 
     expect(response.status()).toBe(200);
@@ -21,31 +20,24 @@ test.describe("Auth API", () => {
     expect(body.user.role).toBe("standard");
   });
 
-  test("should login with generated api user", async ({ request }) => {
+  test("should login with generated api user", async ({
+    authClient,
+    usersClient,
+  }) => {
     const username = `api-user-${test.info().parallelIndex}-${Date.now()}`;
 
-    const response = await request.post(
-      `${config.apiBaseUrl}/test/createUser`,
-      {
-        data: {
-          username: username,
-          password: config.credentials.password,
-          role: "standard",
-        },
-      },
-    );
+    const response: CreateUserApiResponse = await usersClient.createUser({
+      username,
+      password: config.credentials.password,
+      role: "standard",
+    });
 
-    const newUser = (await response.json()).user;
+    const loginResponse = await authClient.login({
+      username: response.user.username,
+      password: config.credentials.password,
+    });
 
-    const loginResponse = await request.post(
-      `${config.apiBaseUrl}/auth/login`,
-      {
-        data: newUser,
-      },
-    );
-
-    expect(loginResponse.status()).toBe(200);
-    expect(await loginResponse.json()).toHaveProperty("token");
+    expect(loginResponse).toHaveProperty("token");
   });
 
   [
@@ -86,14 +78,9 @@ test.describe("Auth API", () => {
       expectedError,
     }) => {
       test(`should return an "${expectedError}" when logging in with ${credentialsType} credentials`, async ({
-        request,
+        authClient,
       }) => {
-        const response = await request.post(`${config.apiBaseUrl}/auth/login`, {
-          data: {
-            username,
-            password,
-          },
-        });
+        const response = await authClient.loginRaw({ username, password });
 
         expect(response.status()).toBe(expectedStatusCode);
 
