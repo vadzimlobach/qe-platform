@@ -18,12 +18,12 @@ export class ProductsClient {
     return respBody;
   }
 
-  async getProductsRaw(token: string): Promise<APIResponse> {
+  async getProductsRaw(token?: string): Promise<APIResponse> {
     Logger.step(`Get all products`);
-    const response = await this.request.get(`${config.apiBaseUrl}/products`, {
-      headers: { Authorization: `Bearer ${token}` },
+
+    return this.request.get(`${config.apiBaseUrl}/products`, {
+      headers: this.buildAuthHeaders(token),
     });
-    return response;
   }
 
   async getProduct(id: number, token: string): Promise<ProductApiResponse> {
@@ -43,15 +43,23 @@ export class ProductsClient {
 
   async getProductRaw(
     id: string | number,
-    token: string,
+    token?: string,
   ): Promise<APIResponse> {
     Logger.step(`Get product by id ${id}`);
     const response = await this.request.get(
       `${config.apiBaseUrl}/products/${id}`,
       {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: this.buildAuthHeaders(token),
       },
     );
     return response;
+  }
+
+  private buildAuthHeaders(token?: string): Record<string, string> | undefined {
+    if (!token) return undefined;
+
+    return {
+      Authorization: `Bearer ${token}`,
+    };
   }
 }

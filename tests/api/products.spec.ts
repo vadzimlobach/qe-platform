@@ -1,5 +1,4 @@
 import { test, expect } from "../../framework/fixtures/test.fixture";
-import config from "../../config/config";
 
 test.describe("Products API", () => {
   test("should return list of products when product id is not specified", async ({
@@ -53,9 +52,9 @@ test.describe("Products API", () => {
   });
 
   test("should return 401 when called without auth token", async ({
-    request,
+    productsClient,
   }) => {
-    const response = await request.get(`${config.apiBaseUrl}/products`);
+    const response = await productsClient.getProductsRaw();
 
     expect(response.status()).toBe(401);
 
