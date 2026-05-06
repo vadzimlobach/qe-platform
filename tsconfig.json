@@ -19,4 +19,8 @@
         "config",
         "playwright.config.ts"
     ],
+    "exclude": [
+        "tests/performance/**/*.ts",
+        "framework/core/performance/**/*.ts"
+    ],
 }

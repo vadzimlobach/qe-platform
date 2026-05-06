@@ -1,5 +1,5 @@
 import { APIRequestContext, expect, APIResponse } from "@playwright/test";
-import { LoginApiRequest, LoginApiResponse } from "../models/auth";
+import { LoginApiRequest, LoginApiResponse } from "../../types/auth";
 import config from "../../../config/config";
 import { Logger } from "../../utils/logger";
 
