@@ -1,4 +1,5 @@
-import { test, expect } from "@playwright/test";
+import config from "../../config/config";
+import { test, expect } from "../../framework/fixtures/test.fixture";
 import AxeBuilder from "@axe-core/playwright";
 
 test.describe(
@@ -6,19 +7,40 @@ test.describe(
   { tag: ["@ui", "@accessibility", "@smoke"] },
   () => {
     test("login page has no critical or serious accessibility violations", async ({
-      page,
+      loginPage,
+      axeBuilder,
     }) => {
-      await page.goto("/");
+      await loginPage.open();
 
-      const results = await new AxeBuilder({ page })
-        .withTags(["wcag2a", "wcag2aa"])
-        .analyze();
+      const results = await axeBuilder.analyze();
 
-      const seriousViolations = results.violations.filter((violation) =>
+      const violations = results.violations.filter((violation) =>
         ["critical", "serious"].includes(violation.impact ?? ""),
       );
 
-      expect(seriousViolations).toEqual([]);
+      expect(violations).toEqual([]);
+    });
+
+    test("inventory page has no critical or serious accessibility violations", async ({
+      loginPage,
+      inventoryPage,
+      axeBuilder,
+    }) => {
+      await loginPage.open();
+      await loginPage.login(
+        config.credentials.username,
+        config.credentials.password,
+      );
+
+      await inventoryPage.expectLoaded();
+
+      const results = await axeBuilder.analyze();
+
+      const violations = results.violations.filter((violation) =>
+        ["critical", "serious"].includes(violation.impact ?? ""),
+      );
+
+      expect(violations).toEqual([]);
     });
   },
 );
