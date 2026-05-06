@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "types": ["k6"],
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "rewriteRelativeImportExtensions": true
+  },
+  "include": [
+    "tests/performance/**/*.ts",
+    "framework/core/performance/**/*.ts",
+    "framework/types/**/*.ts"
+  ]
+}
