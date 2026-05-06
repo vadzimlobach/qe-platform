@@ -83,6 +83,25 @@ Focus on service behaviour:
 
 ### Accessibility Tests
 
+#### Accessibility Testing Design Decisions
+
+Accessibility checks use `@axe-core/playwright` through a shared Playwright fixture.
+
+The axe builder is configured with:
+
+```ts
+new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa"]).include("#root");
+```
+
+**Rationale:**
+
+- `@axe-core/playwright` integrates directly with Playwright and allows accessibility checks to run as part of the automated test suite.
+- `wcag2a` and `wcag2aa` tags focus the checks on widely recognised WCAG A and AA rules.
+- The scan is scoped to `#root` to focus on the application under test and avoid unrelated browser or wrapper markup.
+- The builder is provided through a shared fixture to avoid duplicated setup and keep accessibility tests consistent.
+- Tests fail only on critical and serious violations to prioritise high-impact issues and reduce noise.
+- Automated axe checks support early detection, but they do not replace full manual accessibility auditing.
+
 Focus on key pages:
 
 - Login page
