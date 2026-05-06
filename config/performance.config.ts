@@ -10,8 +10,13 @@ export const PERFORMANCE_PASSWORD =
   __ENV.PERFORMANCE_PASSWORD || "secret_sauce";
 
 export const performanceOptions: Options = {
-  vus: Number(__ENV.VUS) || 1,
-  duration: __ENV.DURATION || "10s",
+  scenarios: {
+    smoke: {
+      executor: "constant-vus",
+      vus: Number(__ENV.VUS) || 1,
+      duration: __ENV.DURATION || "10s",
+    },
+  },
   thresholds: {
     http_req_duration: ["p(95)<500"],
     http_req_failed: ["rate<0.01"],
