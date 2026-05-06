@@ -1,0 +1,46 @@
+import config from "../../config/config";
+import { test, expect } from "../../framework/fixtures/test.fixture";
+import AxeBuilder from "@axe-core/playwright";
+
+test.describe(
+  "@accessibility accessibility smoke checks",
+  { tag: ["@ui", "@accessibility", "@smoke"] },
+  () => {
+    test("login page has no critical or serious accessibility violations", async ({
+      loginPage,
+      axeBuilder,
+    }) => {
+      await loginPage.open();
+
+      const results = await axeBuilder.analyze();
+
+      const violations = results.violations.filter((violation) =>
+        ["critical", "serious"].includes(violation.impact ?? ""),
+      );
+
+      expect(violations).toEqual([]);
+    });
+
+    test("inventory page has no critical or serious accessibility violations", async ({
+      loginPage,
+      inventoryPage,
+      axeBuilder,
+    }) => {
+      await loginPage.open();
+      await loginPage.login(
+        config.credentials.username,
+        config.credentials.password,
+      );
+
+      await inventoryPage.expectLoaded();
+
+      const results = await axeBuilder.analyze();
+
+      const violations = results.violations.filter((violation) =>
+        ["critical", "serious"].includes(violation.impact ?? ""),
+      );
+
+      expect(violations).toEqual([]);
+    });
+  },
+);

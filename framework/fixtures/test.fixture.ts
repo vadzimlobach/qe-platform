@@ -1,3 +1,4 @@
+import AxeBuilder from "@axe-core/playwright";
 import config from "../../config/config";
 import { AuthClient } from "../core/api/auth.client";
 import { ProductsClient } from "../core/api/products.client";
@@ -14,6 +15,7 @@ type AppFixtures = {
   authClient: AuthClient;
   usersClient: UsersClient;
   productsClient: ProductsClient;
+  axeBuilder: AxeBuilder;
   createApiSession: (options?: ApiSessionOptions) => Promise<ApiSession>;
 };
 
@@ -36,6 +38,14 @@ export const test = base.extend<AppFixtures>({
   },
   productsClient: async ({ request }, use) => {
     await use(new ProductsClient(request));
+  },
+
+  //Accessibility
+  axeBuilder: async ({ page }, use) => {
+    const axeBuilder = new AxeBuilder({ page })
+      .withTags(["wcag2a", "wcag2aa"])
+      .include("#root");
+    await use(axeBuilder);
   },
 
   //Session
