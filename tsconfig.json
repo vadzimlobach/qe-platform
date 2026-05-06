@@ -6,7 +6,7 @@
 
         "strict": true,
 
-        "types": ["node", "@playwright/test", "k6"],
+        "types": ["node", "@playwright/test"],
 
         "resolveJsonModule": true,
         "esModuleInterop": true,
@@ -18,5 +18,9 @@
         "framework",
         "config",
         "playwright.config.ts"
+    ],
+    "exclude": [
+        "tests/performance/**/*.ts",
+        "framework/core/performance/**/*.ts"
     ],
 }
