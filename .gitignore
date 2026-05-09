@@ -11,3 +11,8 @@ node_modules/
 # Allure
 /allure-report
 /allure-results
+
+#OS
+.DS_Store
+.AppleDouble
+.LSOverride
