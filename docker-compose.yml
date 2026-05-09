@@ -1,0 +1,19 @@
+services:
+  mock-api:
+    build: .
+    command: ["npm", "run", "mock-api"]
+    env_file:
+      - .env
+
+  tests:
+    build: .
+    depends_on:
+      - mock-api
+    env_file:
+      - .env
+    environment:
+      API_BASE_URL: http://mock-api:3000
+    volumes:
+      - ./playwright-report:/app/playwright-report
+      - ./test-results:/app/test-results
+      - ./allure-results:/app/allure-results
