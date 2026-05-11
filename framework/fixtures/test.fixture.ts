@@ -8,6 +8,7 @@ import { Role } from "../core/models/users";
 import { InventoryPage } from "../core/ui/pages/inventory.page";
 import { LoginPage } from "../core/ui/pages/login.page";
 import { test as base } from "@playwright/test";
+import { UserFactory, UserType } from "../utils/users.factory";
 
 type AppFixtures = {
   loginPage: LoginPage;
@@ -15,6 +16,8 @@ type AppFixtures = {
   authClient: AuthClient;
   usersClient: UsersClient;
   productsClient: ProductsClient;
+  uiUserFactory: UserFactory;
+  apiUserFactory: UserFactory;
   axeBuilder: AxeBuilder;
   createApiSession: (options?: ApiSessionOptions) => Promise<ApiSession>;
 };
@@ -40,6 +43,16 @@ export const test = base.extend<AppFixtures>({
     await use(new ProductsClient(request));
   },
 
+  uiUserFactory: async ({}, use) => {
+    await use(new UserFactory(UserType.Ui));
+  },
+
+  apiUserFactory: async ({ usersClient }, use, testInfo) => {
+    const factory = new UserFactory(UserType.Api, usersClient, testInfo);
+    await use(factory);
+    await factory.dispose();
+  },
+
   //Accessibility
   axeBuilder: async ({ page }, use) => {
     const axeBuilder = new AxeBuilder({ page })
@@ -49,17 +62,14 @@ export const test = base.extend<AppFixtures>({
   },
 
   //Session
-  createApiSession: async ({ authClient, usersClient }, use, testInfo) => {
+  createApiSession: async ({ authClient, apiUserFactory }, use) => {
     await use(async (options) => {
-      const username = `api-user-${testInfo.parallelIndex}-${Date.now()}`;
-      const { user } = await usersClient.createUser({
+      const { username, password } = await apiUserFactory.createUser(
+        options?.role ?? "standard",
+      );
+      const { user, token } = await authClient.login({
         username,
-        password: config.credentials.password,
-        role: options?.role ?? "standard",
-      });
-      const { token } = await authClient.login({
-        username: user.username,
-        password: config.credentials.password,
+        password,
       });
 
       return { user, token };

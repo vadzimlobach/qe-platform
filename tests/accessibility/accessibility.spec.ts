@@ -25,12 +25,10 @@ test.describe(
       loginPage,
       inventoryPage,
       axeBuilder,
+      uiUserFactory,
     }) => {
       await loginPage.open();
-      await loginPage.login(
-        config.credentials.username,
-        config.credentials.password,
-      );
+      await loginPage.login(await uiUserFactory.createUser("standard"));
 
       await inventoryPage.expectLoaded();
 

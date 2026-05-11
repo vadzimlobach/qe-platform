@@ -1,6 +1,7 @@
 import { expect, Locator, Page } from "@playwright/test";
 import { routes } from "../routes";
 import { Logger } from "../../../utils/logger";
+import { TestUser } from "../../../utils/users.factory";
 
 export class LoginPage {
   private readonly usernameInput: Locator;
@@ -23,7 +24,7 @@ export class LoginPage {
     await expect(this.usernameInput).toBeVisible();
   }
 
-  async login(username: string, password: string): Promise<void> {
+  async login({ username, password }: TestUser): Promise<void> {
     Logger.step(`Login with ${username} credentials`);
     await this.usernameInput.fill(username);
     await this.passwordInput.fill(password);

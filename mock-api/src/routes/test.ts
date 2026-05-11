@@ -28,3 +28,13 @@ testRouter.post("/createUser", (req, res) => {
   users.push({ id: newUserId, username, password, role });
   return res.status(200).json({ user: users[users.length - 1] });
 });
+
+testRouter.delete("/users/:username", (req, res) => {
+  const { username } = req.params;
+  const exists = users.findIndex((u) => u.username === username);
+  if (exists === -1) {
+    return res.status(404).json({ error: `User ${username} not found` });
+  }
+  users.splice(exists, 1);
+  return res.status(204).send();
+});

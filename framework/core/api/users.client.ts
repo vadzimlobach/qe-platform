@@ -3,6 +3,7 @@ import {
   CreateUserApiRequest,
   CreateUserApiResponse,
   GetUsersApiResponse,
+  DeleteUserApiResponse,
   Role,
 } from "../models/users";
 import config from "../../../config/config";
@@ -53,5 +54,18 @@ export class UsersClient {
     const response = await this.request.get(`${config.apiBaseUrl}/test/users`);
     const respBody: GetUsersApiResponse = await response.json();
     return respBody;
+  }
+
+  async deleteUser(username: string): Promise<void> {
+    Logger.step(`Delete user ${username}`);
+    const response = await this.request.delete(
+      `${config.apiBaseUrl}/test/users/${username}`,
+    );
+    if (response.status() === 404) {
+      Logger.step(`User ${username} already deleted`);
+      return;
+    }
+
+    await expect(response).toBeOK();
   }
 }
