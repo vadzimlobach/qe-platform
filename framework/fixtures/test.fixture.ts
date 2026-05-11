@@ -48,7 +48,9 @@ export const test = base.extend<AppFixtures>({
   },
 
   apiUserFactory: async ({ usersClient }, use, testInfo) => {
-    await use(new UserFactory(UserType.Api, usersClient, testInfo));
+    const factory = new UserFactory(UserType.Api, usersClient, testInfo);
+    await use(factory);
+    await factory.dispose();
   },
 
   //Accessibility

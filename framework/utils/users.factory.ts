@@ -32,11 +32,14 @@ export class UserFactory {
   public createUser(role: Role): Promise<TestUser> | TestUser {
     return this.userData.getUser(role);
   }
+  public dispose(): Promise<void> {
+    return this.userData.dispose();
+  }
 }
 
 export interface UserData {
   getUser(role: Role): Promise<TestUser> | TestUser;
-  dispose?(): Promise<void>;
+  dispose(): Promise<void>;
 }
 
 export class UiUserData implements UserData {
@@ -55,9 +58,13 @@ export class UiUserData implements UserData {
     }
     return { username, password };
   }
+  async dispose(): Promise<void> {
+    await Promise.resolve();
+  }
 }
 
 export class ApiUserData implements UserData {
+  private users: TestUser[] = [];
   constructor(
     private readonly client?: UsersClient,
     private readonly testInfo?: TestInfo,
@@ -73,6 +80,14 @@ export class ApiUserData implements UserData {
       password: user.password,
       role,
     });
+
+    this.users.push(user);
+
     return user;
+  }
+  async dispose() {
+    this.users.forEach(async (user) => {
+      await this.client?.deleteUser(user.username);
+    });
   }
 }
