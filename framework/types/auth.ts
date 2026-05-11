@@ -1,3 +1,5 @@
+import { Role } from "../core/models/users";
+
 export type LoginApiRequest = {
   username: string;
   password: string;
@@ -8,7 +10,7 @@ export type LoginApiResponse = {
   user: {
     id: string;
     username: string;
-    role: string;
+    role: Role;
   };
 };
 

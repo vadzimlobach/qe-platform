@@ -19,3 +19,7 @@ export type CreateUserApiResponse = {
 export type GetUsersApiResponse = {
   users: User[];
 };
+
+export type DeleteUserApiResponse = {
+  message: string;
+};
