@@ -38,6 +38,12 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
 
+      - name: Start mock API
+        run: npm run mock-api &
+
+      - name: Wait for mock API
+        run: npx wait-on http://localhost:3000
+
       - name: Run smoke tests
         run: npx playwright test --grep @smoke
 
@@ -80,6 +86,12 @@ jobs:
 
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
+
+      - name: Start mock API
+        run: npm run mock-api &
+
+      - name: Wait for mock API
+        run: npx wait-on http://localhost:3000
 
       - name: Run regression tests
         run: npx playwright test --grep @regression
