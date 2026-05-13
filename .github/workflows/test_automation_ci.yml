@@ -55,7 +55,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-report
+          name: playwright-report-${{ github.job }}
           path: playwright-report/
           retention-days: 14
 
@@ -63,7 +63,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-json-results
+          name: playwright-json-results-${{ github.job }}
           path: test-results/results.json
           retention-days: 14
 
@@ -71,7 +71,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: allure-results
+          name: allure-results-${{ github.job }}
           path: allure-results/
           retention-days: 14
 
@@ -79,7 +79,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: allure-report
+          name: allure-report-${{ github.job }}
           path: allure-report/
           retention-days: 14
 
@@ -130,7 +130,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-report
+          name: playwright-report-${{ github.job }}
           path: playwright-report/
           retention-days: 14
 
@@ -138,7 +138,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-json-results
+          name: playwright-json-results-${{ github.job }}
           path: test-results/results.json
           retention-days: 14
 
@@ -146,7 +146,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: allure-results
+          name: allure-results-${{ github.job }}
           path: allure-results/
           retention-days: 14
 
@@ -154,7 +154,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: allure-report
+          name: allure-report-${{ github.job }}
           path: allure-report/
           retention-days: 14
 
@@ -199,7 +199,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-report
+          name: playwright-report-${{ github.job }}
           path: playwright-report/
           retention-days: 14
 
@@ -207,7 +207,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-json-results
+          name: playwright-json-results-${{ github.job }}
           path: test-results/results.json
           retention-days: 14
 
@@ -215,7 +215,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: allure-results
+          name: allure-results-${{ github.job }}
           path: allure-results/
           retention-days: 14
 
@@ -223,7 +223,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: allure-report
+          name: allure-report-${{ github.job }}
           path: allure-report/
           retention-days: 14
 
