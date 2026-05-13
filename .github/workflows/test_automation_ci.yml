@@ -91,7 +91,7 @@ jobs:
         run: npm run mock-api &
 
       - name: Wait for mock API
-        run: npx wait-on http://localhost:3000
+        run: npx wait-on http://localhost:3000/test/users
 
       - name: Run regression tests
         run: npx playwright test --grep @regression
