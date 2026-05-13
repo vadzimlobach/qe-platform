@@ -1,6 +1,4 @@
-import config from "../../config/config";
 import { test, expect } from "../../framework/fixtures/test.fixture";
-import AxeBuilder from "@axe-core/playwright";
 
 test.describe(
   "@accessibility accessibility smoke checks",

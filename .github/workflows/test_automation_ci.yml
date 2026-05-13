@@ -47,15 +47,41 @@ jobs:
       - name: Run smoke tests
         run: npx playwright test --grep @smoke
 
-      - name: Upload test results
+      - name: Upload Allure report
+        if: always()
+        run: npm run allure:generate
+
+      - name: Upload Playwright HTML report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: smoke-results
-          path: |
-            playwright-report/
-            test-results/
-            allure-results/
+          name: playwright-report-${{ github.job }}
+          path: playwright-report/
+          retention-days: 14
+
+      - name: Upload Playwright JSON results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-json-results-${{ github.job }}
+          path: test-results/results.json
+          retention-days: 14
+
+      - name: Upload Allure results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results-${{ github.job }}
+          path: allure-results/
+          retention-days: 14
+
+      - name: Upload Allure HTML report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report-${{ github.job }}
+          path: allure-report/
+          retention-days: 14
 
   regression-tests:
     name: Regression Suite (Main Only)
@@ -96,15 +122,41 @@ jobs:
       - name: Run regression tests
         run: npx playwright test --grep @regression
 
-      - name: Upload test results
+      - name: Upload Allure report
+        if: always()
+        run: npm run allure:generate
+
+      - name: Upload Playwright HTML report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: regression-results
-          path: |
-            playwright-report/
-            test-results/
-            allure-results/
+          name: playwright-report-${{ github.job }}
+          path: playwright-report/
+          retention-days: 14
+
+      - name: Upload Playwright JSON results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-json-results-${{ github.job }}
+          path: test-results/results.json
+          retention-days: 14
+
+      - name: Upload Allure results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results-${{ github.job }}
+          path: allure-results/
+          retention-days: 14
+
+      - name: Upload Allure HTML report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report-${{ github.job }}
+          path: allure-report/
+          retention-days: 14
 
   accessibility-tests:
     name: Accessibility Checks
@@ -139,15 +191,41 @@ jobs:
       - name: Run accessibility tests
         run: npx playwright test --grep @accessibility
 
-      - name: Upload test results
+      - name: Upload Allure report
+        if: always()
+        run: npm run allure:generate
+
+      - name: Upload Playwright HTML report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: accessibility-results
-          path: |
-            playwright-report/
-            test-results/
-            allure-results/
+          name: playwright-report-${{ github.job }}
+          path: playwright-report/
+          retention-days: 14
+
+      - name: Upload Playwright JSON results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-json-results-${{ github.job }}
+          path: test-results/results.json
+          retention-days: 14
+
+      - name: Upload Allure results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results-${{ github.job }}
+          path: allure-results/
+          retention-days: 14
+
+      - name: Upload Allure HTML report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report-${{ github.job }}
+          path: allure-report/
+          retention-days: 14
 
   performance-tests:
     name: Performance (Manual / Optional)
