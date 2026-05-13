@@ -16,6 +16,12 @@ jobs:
     if: github.event_name != 'workflow_dispatch'
     environment: dev
 
+    env:
+      UI_BASE_URL: ${{ vars.UI_BASE_URL}}
+      API_BASE_URL: ${{ vars.API_BASE_URL }}
+      TEST_USER: ${{ vars.STANDARD_USER }}
+      PASSWORD: ${{ secrets.PASSWORD }}
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -53,6 +59,12 @@ jobs:
       github.ref == 'refs/heads/main' ||
       github.event_name == 'pull_request'
     environment: dev
+    env:
+      UI_BASE_URL: ${{ vars.UI_BASE_URL}}
+      API_BASE_URL: ${{ vars.API_BASE_URL }}
+      TEST_USER: ${{ vars.STANDARD_USER }}
+      PASSWORD: ${{ secrets.PASSWORD }}
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
