@@ -4,7 +4,7 @@ import AxeBuilder from "@axe-core/playwright";
 
 test.describe(
   "@accessibility accessibility smoke checks",
-  { tag: ["@ui", "@accessibility", "@smoke"] },
+  { tag: ["@ui", "@accessibility"] },
   () => {
     test("login page has no critical or serious accessibility violations", async ({
       loginPage,
