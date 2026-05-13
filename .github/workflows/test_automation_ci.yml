@@ -19,7 +19,7 @@ jobs:
     env:
       UI_BASE_URL: ${{ vars.UI_BASE_URL }}
       API_BASE_URL: ${{ vars.API_BASE_URL }}
-      TEST_USER: ${{ vars.STANDARD_USER }}
+      STANDARD_USER: ${{ vars.STANDARD_USER }}
       PASSWORD: ${{ secrets.PASSWORD }}
 
     steps:
@@ -62,7 +62,7 @@ jobs:
     env:
       UI_BASE_URL: ${{ vars.UI_BASE_URL }}
       API_BASE_URL: ${{ vars.API_BASE_URL }}
-      TEST_USER: ${{ vars.STANDARD_USER }}
+      STANDARD_USER: ${{ vars.STANDARD_USER }}
       PASSWORD: ${{ secrets.PASSWORD }}
 
     steps:
@@ -105,7 +105,7 @@ jobs:
     env:
       UI_BASE_URL: ${{ vars.UI_BASE_URL }}
       API_BASE_URL: ${{ vars.API_BASE_URL }}
-      TEST_USER: ${{ vars.STANDARD_USER }}
+      STANDARD_USER: ${{ vars.STANDARD_USER }}
       PASSWORD: ${{ secrets.PASSWORD }}
 
     steps:
