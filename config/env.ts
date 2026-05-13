@@ -1,5 +1,7 @@
 import dotenv from "dotenv";
 
-dotenv.config();
+if (!process.env.CI) {
+  dotenv.config();
+}
 
 export const env = process.env;

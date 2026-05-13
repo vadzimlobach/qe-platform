@@ -17,7 +17,7 @@ jobs:
     environment: dev
 
     env:
-      UI_BASE_URL: ${{ vars.UI_BASE_URL}}
+      UI_BASE_URL: ${{ vars.UI_BASE_URL }}
       API_BASE_URL: ${{ vars.API_BASE_URL }}
       TEST_USER: ${{ vars.STANDARD_USER }}
       PASSWORD: ${{ secrets.PASSWORD }}
@@ -60,7 +60,7 @@ jobs:
       github.event_name == 'pull_request'
     environment: dev
     env:
-      UI_BASE_URL: ${{ vars.UI_BASE_URL}}
+      UI_BASE_URL: ${{ vars.UI_BASE_URL }}
       API_BASE_URL: ${{ vars.API_BASE_URL }}
       TEST_USER: ${{ vars.STANDARD_USER }}
       PASSWORD: ${{ secrets.PASSWORD }}
@@ -103,7 +103,7 @@ jobs:
       github.event_name == 'push'
     environment: dev
     env:
-      UI_BASE_URL: ${{ vars.UI_BASE_URL}}
+      UI_BASE_URL: ${{ vars.UI_BASE_URL }}
       API_BASE_URL: ${{ vars.API_BASE_URL }}
       TEST_USER: ${{ vars.STANDARD_USER }}
       PASSWORD: ${{ secrets.PASSWORD }}
