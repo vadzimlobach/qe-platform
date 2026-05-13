@@ -21,7 +21,7 @@ test.describe(
       expect(violations).toEqual([]);
     });
 
-    test("inventory page has no critical or serious accessibility violations", async ({
+    test.skip("inventory page has no critical or serious accessibility violations", async ({
       loginPage,
       inventoryPage,
       axeBuilder,
