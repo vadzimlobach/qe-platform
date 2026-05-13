@@ -47,15 +47,41 @@ jobs:
       - name: Run smoke tests
         run: npx playwright test --grep @smoke
 
-      - name: Upload test results
+      - name: Upload Allure report
+        if: always()
+        run: npm run allure:generate
+
+      - name: Upload Playwright HTML report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: smoke-results
-          path: |
-            playwright-report/
-            test-results/
-            allure-results/
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 14
+
+      - name: Upload Playwright JSON results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-json-results
+          path: test-results/results.json
+          retention-days: 14
+
+      - name: Upload Allure results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results
+          path: allure-results/
+          retention-days: 14
+
+      - name: Upload Allure HTML report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report
+          path: allure-report/
+          retention-days: 14
 
   regression-tests:
     name: Regression Suite (Main Only)
